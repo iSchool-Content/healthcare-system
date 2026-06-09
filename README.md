@@ -203,13 +203,64 @@ npm install
 MONGO_URI=mongodb://localhost:27017/healthcare_test JWT_SECRET=testsecret npm test
 ```
 
+## Cloud Deployment
+
+### Frontend → Netlify
+
+1. Connect your GitHub repo in the [Netlify dashboard](https://app.netlify.com).
+2. Netlify auto-detects `netlify.toml` at the repo root — no manual configuration needed:
+   - **Base directory:** `frontend`
+   - **Build command:** `npm run build`
+   - **Publish directory:** `dist`
+   - All routes redirect to `index.html` (SPA support).
+3. After deploy, copy the Netlify URL (e.g. `https://your-app.netlify.app`) and set it as an environment variable on your backend services:
+   ```
+   FRONTEND_URL=https://your-app.netlify.app
+   ```
+
+### Backend + Appointment Service → Render
+
+1. Connect your GitHub repo in the [Render dashboard](https://render.com).
+2. Render reads `render.yaml` at the repo root and creates two web services:
+   - `healthcare-backend` (root: `backend`, port 3000)
+   - `healthcare-appointments` (root: `appointment-service`, port 3001)
+3. Set these environment variables for each service in the Render dashboard:
+   | Variable | Description |
+   |---|---|
+   | `MONGODB_URI` | MongoDB Atlas connection string (see below) |
+   | `JWT_SECRET` | Long random string for signing JWT tokens |
+   | `FRONTEND_URL` | Your Netlify URL |
+4. For `healthcare-backend`, also set:
+   | Variable | Value |
+   |---|---|
+   | `APPOINTMENT_SERVICE_URL` | Render URL of `healthcare-appointments` |
+
+### Database → MongoDB Atlas
+
+1. Create a free cluster at [cloud.mongodb.com](https://cloud.mongodb.com).
+2. Create two databases on the cluster: `healthcaredb` and `appointmentsdb`.
+3. Create a database user and whitelist `0.0.0.0/0` (or Render's IP range) in Network Access.
+4. Copy the connection string and set it as `MONGODB_URI` on both Render services:
+   ```
+   mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/healthcaredb?retryWrites=true&w=majority
+   ```
+   For the appointment service use `/appointmentsdb` in the connection string.
+5. Run the seed script once after deployment:
+   ```bash
+   MONGODB_URI=<atlas-uri> APPOINTMENTS_MONGODB_URI=<atlas-appointments-uri> npm run seed
+   ```
+
+---
+
 ## Project Structure
 
 ```
 healthcare-system/
-├── frontend/          React + Vite + React Query + Socket.io
-├── backend/           Node.js + Express + MongoDB + Socket.io
+├── frontend/            React + Vite + React Query + Socket.io
+├── backend/             Node.js + Express + MongoDB + Socket.io
 ├── appointment-service/ Node.js + Express + MongoDB (port 3001)
-├── k8s/               Kubernetes manifests
-└── .github/workflows/ GitHub Actions CI
+├── k8s/                 Kubernetes manifests
+├── netlify.toml         Netlify frontend deployment config
+├── render.yaml          Render backend deployment config
+└── .github/workflows/   GitHub Actions CI
 ```

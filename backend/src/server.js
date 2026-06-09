@@ -49,7 +49,7 @@ const PORT = process.env.PORT || 3000;
 
 const connectAndStart = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI);
     console.log('MongoDB connected');
     server.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
   } catch (err) {

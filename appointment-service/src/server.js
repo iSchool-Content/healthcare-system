@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3001;
 
 const connectAndStart = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI);
     console.log('Appointment Service: MongoDB connected');
     app.listen(PORT, () => console.log(`Appointment Service running on port ${PORT}`));
   } catch (err) {

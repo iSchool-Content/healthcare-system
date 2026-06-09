@@ -35,6 +35,10 @@ jobs:
         working-directory: backend
         run: npm ci
 
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint
+
       - name: Run backend tests
         working-directory: backend
         env:
@@ -45,7 +49,7 @@ jobs:
         run: npm test
 
   appointment-service:
-    name: Appointment Service — Install, Build
+    name: Appointment Service — Install, Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +64,10 @@ jobs:
       - name: Install appointment-service dependencies
         working-directory: appointment-service
         run: npm ci
+
+      - name: Lint appointment-service
+        working-directory: appointment-service
+        run: npm run lint
 
   frontend:
     name: Frontend — Install, Lint, Build
@@ -77,6 +85,10 @@ jobs:
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
+
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
 
       - name: Build frontend
         working-directory: frontend
