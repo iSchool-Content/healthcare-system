@@ -16,7 +16,16 @@ export default function Patients() {
 
   const openCreate = () => { setForm(EMPTY); setSelected(null); setModal('create'); setError(''); };
   const openEdit = (p) => {
-    setForm({ ...p, age: String(p.age), allergies: (p.allergies || []).join(', ') });
+    setForm({
+      name: p.name || '',
+      age: String(p.age),
+      gender: p.gender || 'male',
+      phone: p.phone || '',
+      email: p.email || '',
+      status: p.status || 'stable',
+      bloodType: p.bloodType || '',
+      allergies: (p.allergies || []).join(', '),
+    });
     setSelected(p);
     setModal('edit');
     setError('');

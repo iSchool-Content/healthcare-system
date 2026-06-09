@@ -37,6 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/patients', patientRoutes);
 app.use('/api/medical-records', medicalRecordRoutes);
 
+app.get('/', (_req, res) => res.json({ status: 'ok', service: 'healthcare-api', version: '1.0.0' }));
 app.get('/health', (_req, res) => res.json({ status: 'ok', service: 'backend' }));
 
 io.on('connection', (socket) => {

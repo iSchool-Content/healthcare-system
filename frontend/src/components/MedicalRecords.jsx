@@ -35,7 +35,14 @@ export default function MedicalRecords() {
 
   const openCreate = () => { setForm(EMPTY); setSelected(null); setModal('create'); setError(''); };
   const openEdit = (r) => {
-    setForm({ ...r, patientId: r.patient?._id || r.patient, visitDate: r.visitDate?.slice(0, 10) });
+    setForm({
+      patientId: r.patient?._id || r.patient || '',
+      doctor: r.doctor || '',
+      diagnosis: r.diagnosis || '',
+      treatment: r.treatment || '',
+      notes: r.notes || '',
+      visitDate: r.visitDate?.slice(0, 10) || '',
+    });
     setSelected(r); setModal('edit'); setError('');
   };
   const closeModal = () => setModal(null);
@@ -43,7 +50,14 @@ export default function MedicalRecords() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const payload = { ...form, patient: form.patientId };
+    const payload = {
+      patient: form.patientId,
+      doctor: form.doctor,
+      diagnosis: form.diagnosis,
+      treatment: form.treatment,
+      notes: form.notes,
+      ...(form.visitDate && { visitDate: form.visitDate }),
+    };
     try {
       if (modal === 'create') await createMut.mutateAsync(payload);
       else await updateMut.mutateAsync({ id: selected._id, data: payload });

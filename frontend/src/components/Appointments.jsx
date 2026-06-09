@@ -30,7 +30,19 @@ export default function Appointments() {
   const [error, setError] = useState('');
 
   const openCreate = () => { setForm(EMPTY); setSelected(null); setModal('create'); setError(''); };
-  const openEdit = (a) => { setForm({ ...a, date: a.date?.slice(0, 10) }); setSelected(a); setModal('edit'); setError(''); };
+  const openEdit = (a) => {
+    setForm({
+      patientName: a.patientName || '',
+      patientId: a.patientId || '',
+      doctor: a.doctor || '',
+      date: a.date?.slice(0, 10) || '',
+      time: a.time || '',
+      type: a.type || 'consultation',
+      status: a.status || 'scheduled',
+      notes: a.notes || '',
+    });
+    setSelected(a); setModal('edit'); setError('');
+  };
   const closeModal = () => setModal(null);
 
   const handleSubmit = async (e) => {
