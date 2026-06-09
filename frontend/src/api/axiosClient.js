@@ -7,7 +7,7 @@ export const api = axios.create({
 
 export const appointmentApi = axios.create({
   baseURL: import.meta.env.VITE_APPOINTMENT_URL || 'http://localhost:3001',
-  withCredentials: true,
+  withCredentials: false,
 });
 
 api.interceptors.response.use(
