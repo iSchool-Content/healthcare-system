@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hospital-aws
+  labels:
+    environment: production
+    cloud: aws
+    status: active
